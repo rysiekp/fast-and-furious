@@ -8,7 +8,7 @@ import play.api.mvc._
 
 import javax.inject._
 import scala.concurrent.{ExecutionContext, Future}
-import scala.util.{Failure, Success}
+import scala.util.{Failure, Success, Try}
 
 @Singleton
 class ScreeningsController @Inject()(processor: ScreeningProcessor,
@@ -33,9 +33,10 @@ class ScreeningsController @Inject()(processor: ScreeningProcessor,
     }, { screening =>
       screening.validate match {
         case Failure(e) => Future.successful(BadRequest(Json.toJson(ErrorResponse(BAD_REQUEST, e.getMessage))))
-        case Success(_) => val createdMovieFuture: Future[Option[Screening]] = processor.upsert(screening)
-          createdMovieFuture.map { createdMovie =>
-            Created(Json.toJson(SuccessResponse(createdMovie)))
+        case Success(_) => val createdMovieFuture: Future[Try[Screening]] = processor.upsert(screening)
+          createdMovieFuture.map {
+            case Success(createdMovie) => Created(Json.toJson(SuccessResponse(createdMovie)))
+            case Failure(e) => BadRequest(Json.toJson(e.getMessage))
           }
       }
     })
