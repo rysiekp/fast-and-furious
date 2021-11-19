@@ -1,13 +1,13 @@
-POST    /movies/                    controllers.MoviesController.create
-GET     /movies/                    controllers.MoviesController.list
+POST    /movies/                          controllers.MoviesController.create
+GET     /movies/                          controllers.MoviesController.list
 GET     /movies/details/title/:title/     controllers.MoviesController.getDetailsByTitle(title: String)
-GET     /movies/details/id/:movieId/   controllers.MoviesController.getDetailsById(movieId: Long)
+GET     /movies/details/id/:movieId/      controllers.MoviesController.getDetailsById(movieId: Long)
 
-POST    /screenings/                controllers.ScreeningsController.createOrUpdate
-GET     /screenings/                controllers.ScreeningsController.list
-GET     /screenings/delete/:id/     controllers.ScreeningsController.delete(id: Long)
+POST    /screenings/                      controllers.ScreeningsController.createOrUpdate
+GET     /screenings/                      controllers.ScreeningsController.list
+DELETE  /screenings/:id/                  controllers.ScreeningsController.delete(id: Long)
 
-POST    /reviews/                    controllers.ReviewsController.create
-GET     /reviews/                    controllers.ReviewsController.list
+POST    /reviews/                         controllers.ReviewsController.create
+GET     /reviews/                         controllers.ReviewsController.list
 
-GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)
+GET     /assets/*file                     controllers.Assets.versioned(path="/public", file: Asset)

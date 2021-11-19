@@ -10,7 +10,7 @@ import scala.concurrent.{ExecutionContext, Future}
 import scala.util.Try
 
 class MovieProcessor @Inject()(moviesTable: MoviesTable,
-                                protected val dbConfigProvider: DatabaseConfigProvider)
+                               protected val dbConfigProvider: DatabaseConfigProvider)
                               (implicit ec: ExecutionContext,
                                implicit val config: Configuration) extends HasDatabaseConfigProvider[JdbcProfile] {
   import dbConfig.profile.api._
