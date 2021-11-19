@@ -26,7 +26,17 @@ class MoviesController @Inject()(processor: MovieProcessor,
 
   def getDetailsById(movieId: Long) = Action.async { _ =>
     val movieFuture: Future[Option[OmdbData]] = processor.getDetailsById(movieId)
-    movieFuture.map { movie =>
+    getDetails(movieFuture)
+  }
+
+  def getDetailsByTitle(title: String) = Action.async { _ =>
+    val movieFuture: Future[Option[OmdbData]] = processor.getDetailsByTitle(title)
+    getDetails(movieFuture)
+
+  }
+
+  private def getDetails(omdbFuture: Future[Option[OmdbData]]): Future[Result] = {
+    omdbFuture.map { movie =>
       movie.fold {
         NotFound(Json.toJson(ErrorResponse(NOT_FOUND, "No movie found")))
       } { movie =>

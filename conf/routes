@@ -1,6 +1,7 @@
 POST    /movies/                    controllers.MoviesController.create
 GET     /movies/                    controllers.MoviesController.list
-GET     /movies/details/:movieId/   controllers.MoviesController.getDetailsById(movieId: Long)
+GET     /movies/details/title/:title/     controllers.MoviesController.getDetailsByTitle(title: String)
+GET     /movies/details/id/:movieId/   controllers.MoviesController.getDetailsById(movieId: Long)
 
 POST    /screenings/                controllers.ScreeningsController.createOrUpdate
 GET     /screenings/                controllers.ScreeningsController.list

@@ -24,12 +24,20 @@ class MovieProcessor @Inject()(moviesTable: MoviesTable,
 
   def getDetailsById(movieId: Long): Future[Option[OmdbData]] = {
     val movieFuture = getById(movieId)
+    getDetails(movieFuture)
+  }
+
+  def getDetailsByTitle(title: String): Future[Option[OmdbData]] = {
+    val movieFuture = getByTitle(title)
+    getDetails(movieFuture)
+  }
+
+  private def getDetails(movieFuture: Future[Option[Movie]]): Future[Option[OmdbData]] = {
     movieFuture.map {
       case None => None
-      case Some(movie) => {
+      case Some(movie) =>
         val omdbClient = new OMDBClient
         Try { OmdbData(omdbClient.titleById(movie.imdbId, plot = true)) }.toOption
-      }
     }
   }
 
@@ -49,5 +57,12 @@ class MovieProcessor @Inject()(moviesTable: MoviesTable,
       f.id === movieId
     }.result.headOption
     db.run(movieById)
+  }
+
+  def getByTitle(title: String): Future[Option[Movie]] = {
+    val movieByTitle = table.filter { f =>
+      f.title === title
+    }.result.headOption
+    db.run(movieByTitle)
   }
 }
