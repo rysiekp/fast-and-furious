@@ -15,7 +15,7 @@ class MovieProcessor @Inject()(moviesTable: MoviesTable,
                                implicit val config: Configuration) extends HasDatabaseConfigProvider[JdbcProfile] {
   import dbConfig.profile.api._
 
-  private val table = TableQuery[moviesTable.MoviesTable]
+  private val table = TableQuery[moviesTable.T]
 
   def list: Future[Seq[Movie]] = {
     val moviesList = table.result
@@ -23,10 +23,7 @@ class MovieProcessor @Inject()(moviesTable: MoviesTable,
   }
 
   def getDetailsById(movieId: Long): Future[Option[OmdbData]] = {
-    val movieById = table.filter { f =>
-      f.id === movieId
-    }.result.headOption
-    val movieFuture = db.run(movieById)
+    val movieFuture = getById(movieId)
     movieFuture.map {
       case None => None
       case Some(movie) => {
@@ -45,5 +42,12 @@ class MovieProcessor @Inject()(moviesTable: MoviesTable,
     }
 
     createdCopy
+  }
+
+  def getById(movieId: Long): Future[Option[Movie]] = {
+    val movieById = table.filter { f =>
+      f.id === movieId
+    }.result.headOption
+    db.run(movieById)
   }
 }

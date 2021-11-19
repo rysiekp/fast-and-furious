@@ -11,7 +11,7 @@ class ScreeningProcessor @Inject()(screeningsTable: ScreeningsTable,
                                   (implicit ec: ExecutionContext) extends HasDatabaseConfigProvider[JdbcProfile] {
   import dbConfig.profile.api._
 
-  private val table = TableQuery[screeningsTable.ScreeningsTable]
+  private val table = TableQuery[screeningsTable.T]
 
   def list: Future[Seq[Screening]] = db.run(table.result)
 

@@ -8,16 +8,7 @@ import scala.math.BigDecimal.RoundingMode
 import scala.util.{Failure, Success, Try}
 
 case class Screening(id: Option[Long], movieId: Long, screeningTime: String, price: BigDecimal) {
-  def validate(): Unit = {
-    validateScreeningTime(screeningTime) match {
-      case Failure(e) => throw e
-      case Success(_) =>
-    }
-    validatePrice(price) match {
-      case Failure(e) => throw e
-      case Success(_) =>
-    }
-  }
+  def validate: Try[Screening] = validateScreeningTime(screeningTime).flatMap(_ => validatePrice(price)).map(_ => this)
 }
 
 object Screening {

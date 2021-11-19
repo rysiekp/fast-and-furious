@@ -8,6 +8,7 @@ import play.api.mvc._
 
 import javax.inject._
 import scala.concurrent.{ExecutionContext, Future}
+import scala.util.{Failure, Success}
 
 @Singleton
 class ScreeningsController @Inject()(processor: ScreeningProcessor,
@@ -22,18 +23,6 @@ class ScreeningsController @Inject()(processor: ScreeningProcessor,
     response
   }
 
-//
-//  def getById(movieId: Long) = Action.async { request =>
-//    val movieFuture: Future[Option[Movie]] = processor.getById(movieId)
-//    movieFuture.map { movie =>
-//      movie.fold {
-//        NotFound(Json.toJson(ErrorResponse(NOT_FOUND, "No movie found")))
-//      } { movie =>
-//        Ok(Json.toJson(SuccessResponse(movie)))
-//      }
-//    }
-//  }
-//
   def createOrUpdate = Action.async(parse.json) { request =>
     val incomingBody = request.body.validate[Screening]
 
@@ -42,10 +31,12 @@ class ScreeningsController @Inject()(processor: ScreeningProcessor,
       val response = ErrorResponse(ErrorResponse.INVALID_JSON, errorMessage)
       Future.successful(BadRequest(Json.toJson(response)))
     }, { screening =>
-      screening.validate
-      val createdMovieFuture: Future[Option[Screening]] = processor.upsert(screening)
-      createdMovieFuture.map { createdMovie =>
-        Created(Json.toJson(SuccessResponse(createdMovie)))
+      screening.validate match {
+        case Failure(e) => Future.successful(BadRequest(Json.toJson(ErrorResponse(BAD_REQUEST, e.getMessage))))
+        case Success(_) => val createdMovieFuture: Future[Option[Screening]] = processor.upsert(screening)
+          createdMovieFuture.map { createdMovie =>
+            Created(Json.toJson(SuccessResponse(createdMovie)))
+          }
       }
     })
   }

@@ -6,7 +6,7 @@ import javax.inject.Inject
 
 class ScreeningsTable @Inject()(protected val dbConfigProvider: DatabaseConfigProvider) extends HasDatabaseConfigProvider[JdbcProfile] {
   import dbConfig.profile.api._
-  class ScreeningsTable(tag: Tag) extends Table[Screening](tag, "SCREENINGS")  {
+  class T(tag: Tag) extends Table[Screening](tag, "SCREENINGS")  {
 
     def id = column[Long]("ID", O.PrimaryKey, O.AutoInc)
     def movieId = column[Long]("MOVIE_ID")
@@ -15,5 +15,4 @@ class ScreeningsTable @Inject()(protected val dbConfigProvider: DatabaseConfigPr
 
     def * = (id.?, movieId, screeningTime, price) <> ((Screening.apply _).tupled, Screening.unapply)
   }
-
 }
