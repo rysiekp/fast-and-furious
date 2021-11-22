@@ -2,7 +2,7 @@ package com.piktel.fast_and_furious.controller
 
 import com.piktel.fast_and_furious.model.review.{Review, ReviewProcessor}
 import controllers.ReviewsController
-import controllers.responses.{ErrorResponse, SuccessResponse}
+import controllers.responses.{EndpointResponse, ErrorResponse, SuccessResponse}
 import org.mockito.Mockito._
 import org.scalatest.TryValues
 import org.scalatestplus.mockito.MockitoSugar
@@ -47,29 +47,29 @@ class ReviewsControllerTest  extends PlaySpec with TryValues with MockitoSugar {
     val fakeAuthor = "Some Author"
     "return 200 for review without an author" in {
       val fakeReview = Review(None, 1, 3, Some(fakeReviewContent), None)
-      checkCreate(fakeReview, Json.toJson(SuccessResponse(fakeReview.copy(id = Some(1)))))
+      checkCreate(fakeReview, SuccessResponse(fakeReview.copy(id = Some(1))))
     }
 
     "return 200 for review without a content" in {
       val fakeReview = Review(None, 1, 3, None, Some(fakeAuthor))
-      checkCreate(fakeReview, Json.toJson(SuccessResponse(fakeReview.copy(id = Some(1)))))
+      checkCreate(fakeReview, SuccessResponse(fakeReview.copy(id = Some(1))))
     }
 
     "return 200 for a full review" in {
       val fakeReview = Review(None, 1, 3, Some(fakeReviewContent), Some(fakeAuthor))
-      checkCreate(fakeReview, Json.toJson(SuccessResponse(fakeReview.copy(id = Some(1)))))
+      checkCreate(fakeReview, SuccessResponse(fakeReview.copy(id = Some(1))))
     }
 
     "return 400 for review with incorrect rating" in {
       val fakeReview = Review(None, 1, 10, None, None)
-      checkCreate(fakeReview, Json.toJson(ErrorResponse(BAD_REQUEST, Review.WrongRatingError.getMessage)))
+      checkCreate(fakeReview, ErrorResponse(BAD_REQUEST, Review.WrongRatingError.getMessage))
     }
 
-    def checkCreate(review: Review, expectedResponse: JsValue) = {
+    def checkCreate(review: Review, expectedResponse: EndpointResponse) = {
       val json = Json.toJson(review)
       val fakeRequest = FakeRequest(
         POST,
-        "/movies/details/",
+        "/reviews/",
         FakeHeaders(Seq(
           ("Accept", "application/json"),
           ("Content-Type", "application/json"))),
@@ -77,7 +77,7 @@ class ReviewsControllerTest  extends PlaySpec with TryValues with MockitoSugar {
       val newReview = review.copy(id = Some(1))
       when(reviewProcessor.create(review)) thenReturn Future.successful(Success(newReview))
       val result: Future[Result] = controller.create()(fakeRequest)
-      contentAsJson(result) mustBe expectedResponse
+      contentAsJson(result) mustBe Json.toJson(expectedResponse)
     }
   }
 }
