@@ -23,5 +23,3 @@ object SuccessResponse {
     EndpointResponse("ok", Json.toJson(successResponse), None)
   }
 }
-
-object TitleResult

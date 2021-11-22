@@ -17,11 +17,9 @@ class MoviesController @Inject()(processor: MovieProcessor,
                                  implicit val config: Configuration) extends BaseController {
   def list = Action.async { _ =>
     val moviesFuture: Future[Seq[Movie]] = processor.list
-    val response = moviesFuture.map { movies =>
+    moviesFuture.map { movies =>
       Ok(Json.toJson(SuccessResponse(movies)))
     }
-
-    response
   }
 
   def getDetailsById(movieId: Long) = Action.async { _ =>
@@ -58,7 +56,5 @@ class MoviesController @Inject()(processor: MovieProcessor,
         Created(Json.toJson(SuccessResponse(createdMovie)))
       }
     })
-
-
   }
 }
