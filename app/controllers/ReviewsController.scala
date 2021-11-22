@@ -32,11 +32,14 @@ class ReviewsController @Inject()(processor: ReviewProcessor,
       val response = ErrorResponse(ErrorResponse.INVALID_JSON, errorMessage)
       Future.successful(BadRequest(Json.toJson(response)))
     }, { review =>
-      val createdMovieFuture: Future[Try[Review]] = processor.create(review)
-      createdMovieFuture.map { createdReview => createdReview match {
-        case Failure(e) => BadRequest(Json.toJson(e.getMessage))
-        case Success(review) => Created(Json.toJson(SuccessResponse(review)))
-      }}
+      review.validate match {
+        case Failure(e) => Future.successful(BadRequest(Json.toJson(ErrorResponse(BAD_REQUEST, e.getMessage))))
+        case Success(_) => val createdMovieFuture: Future[Try[Review]] = processor.create(review)
+          createdMovieFuture.map { createdReview => createdReview match {
+            case Failure(e) => BadRequest(Json.toJson(e.getMessage))
+            case Success(review) => Created(Json.toJson(SuccessResponse(review)))
+          }}
+      }
     })
   }
 }
