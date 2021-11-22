@@ -12,7 +12,7 @@ object EndpointResponse {
   implicit val format: Format[EndpointResponse] = Json.format[EndpointResponse]
 }
 
-object ErrorResponse {
+object BadResponse {
   def INVALID_JSON = 1000
   def apply(status: Int, message: String) = {
     EndpointResponse("ko", JsNull, Option(ErrorResult(status, message)))

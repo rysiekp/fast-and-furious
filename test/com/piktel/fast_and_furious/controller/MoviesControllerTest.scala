@@ -2,7 +2,7 @@ package com.piktel.fast_and_furious.controller
 
 import com.piktel.fast_and_furious.model.movie.{Movie, MovieProcessor, OmdbData}
 import controllers.MoviesController
-import controllers.responses.{ErrorResponse, SuccessResponse}
+import controllers.responses.{BadResponse, SuccessResponse}
 import org.scalatest.TryValues
 import org.mockito.Mockito._
 import org.scalatestplus.mockito.MockitoSugar
@@ -54,7 +54,7 @@ class MoviesControllerTest extends PlaySpec with TryValues with MockitoSugar {
 
     "return 404 for nonexistent movie" in {
       val mockFuture = Future.successful(None)
-      val expectedResponse = Json.toJson(ErrorResponse(NOT_FOUND, "No movie found"))
+      val expectedResponse = Json.toJson(BadResponse(NOT_FOUND, "No movie found"))
       checkGetDetailsById(mockFuture, expectedResponse)
     }
 
@@ -77,7 +77,7 @@ class MoviesControllerTest extends PlaySpec with TryValues with MockitoSugar {
 
     "return 404 for nonexistent movie" in {
       val mockFuture = Future.successful(None)
-      val expectedResponse = Json.toJson(ErrorResponse(NOT_FOUND, "No movie found"))
+      val expectedResponse = Json.toJson(BadResponse(NOT_FOUND, "No movie found"))
       checkGetDetailsByTitle(mockFuture, expectedResponse)
     }
 

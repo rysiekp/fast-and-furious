@@ -11,3 +11,4 @@ POST    /reviews/                         controllers.ReviewsController.create
 GET     /reviews/                         controllers.ReviewsController.list
 
 GET     /assets/*file                     controllers.Assets.versioned(path="/public", file: Asset)
+GET     /swagger.json                     controllers.ApiHelpController.getResources

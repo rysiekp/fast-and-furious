@@ -2,7 +2,7 @@ package com.piktel.fast_and_furious.controller
 
 import com.piktel.fast_and_furious.model.review.{Review, ReviewProcessor}
 import controllers.ReviewsController
-import controllers.responses.{EndpointResponse, ErrorResponse, SuccessResponse}
+import controllers.responses.{EndpointResponse, BadResponse, SuccessResponse}
 import org.mockito.Mockito._
 import org.scalatest.TryValues
 import org.scalatestplus.mockito.MockitoSugar
@@ -62,7 +62,7 @@ class ReviewsControllerTest  extends PlaySpec with TryValues with MockitoSugar {
 
     "return 400 for review with incorrect rating" in {
       val fakeReview = Review(None, 1, 10, None, None)
-      checkCreate(fakeReview, ErrorResponse(BAD_REQUEST, Review.WrongRatingError.getMessage))
+      checkCreate(fakeReview, BadResponse(BAD_REQUEST, Review.WrongRatingError.getMessage))
     }
 
     def checkCreate(review: Review, expectedResponse: EndpointResponse) = {

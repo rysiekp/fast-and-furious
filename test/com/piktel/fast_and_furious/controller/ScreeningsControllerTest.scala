@@ -8,7 +8,7 @@ import org.scalatestplus.play.PlaySpec
 import play.api.Configuration
 import play.api.test.Helpers
 import com.piktel.fast_and_furious.model.screening.{Screening, ScreeningProcessor}
-import controllers.responses.{EndpointResponse, ErrorResponse, SuccessResponse}
+import controllers.responses.{EndpointResponse, BadResponse, SuccessResponse}
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mockito._
 import org.scalatest.TryValues
@@ -60,7 +60,7 @@ class ScreeningsControllerTest  extends PlaySpec with TryValues with MockitoSuga
     }
 
     "return 400 for screening with incorrect data" in {
-      checkCreate(fakeScreening.copy(price = -1), ErrorResponse(BAD_REQUEST, Screening.NegativePriceError.getMessage))
+      checkCreate(fakeScreening.copy(price = -1), BadResponse(BAD_REQUEST, Screening.NegativePriceError.getMessage))
     }
 
     def checkCreate(screening: Screening, expectedResponse: EndpointResponse): Unit = {
